@@ -39,6 +39,9 @@ jobs:
         fi
         sudo chmod +x /usr/local/bin/cog
 
+    - name: build
+      run: cog build --tag ghcr.io/photo-buzz-de/cog-flux-kontext:latest
+
     - name: push
       run: docker push ghcr.io/photo-buzz-de/cog-flux-kontext:latest
       env:
