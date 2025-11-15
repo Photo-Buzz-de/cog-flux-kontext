@@ -39,13 +39,10 @@ jobs:
         fi
         sudo chmod +x /usr/local/bin/cog
 
-    - name: Build and push
-      uses: docker/push-action@v6
-      with:
-          push: true
-          tags: photo-buzz-de/cog-flux-kontext:latest
-          secrets: |
-            GIT_AUTH_TOKEN=${{ secrets.MYTOKEN }}
+    - name: push
+      run: docker push ghcr.io/photo-buzz-de/cog-flux-kontext:latest
+      env:
+        GIT_AUTH_TOKEN: ${{ secrets.MYTOKEN }}
   # unit-test:
   #   runs-on: ubuntu-latest
   #   if: github.event_name != 'workflow_dispatch'
