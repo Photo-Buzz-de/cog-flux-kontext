@@ -39,34 +39,13 @@ jobs:
         fi
         sudo chmod +x /usr/local/bin/cog
 
-    - name: cog login
-      run: |
-        echo ${{ secrets.COG_TOKEN }} | cog login --token-stdin
-
-    - name: Install cog-safe-push
-      run: |
-        pip install git+https://github.com/replicate/cog-safe-push.git
-
-    - name: Push selected models
-      env:
-        ANTHROPIC_API_KEY: ${{ secrets.ANTHROPIC_API_KEY }}
-        REPLICATE_API_TOKEN: ${{ secrets.REPLICATE_API_TOKEN }}
-      run: |
-        model="kontext-dev"
-
-        echo "==="
-        echo "==="
-        echo "=== Pushing $model"
-        echo "==="
-        echo "==="
-        cog-safe-push --config cog-safe-push-configs/$model.yaml -vv ${{ inputs.ignore_schema_checks && '--ignore-schema-compatibility' || '' }}
-        echo "==="
-        echo "==="
-        echo "=== Pushing underlying official model $model"
-        echo "==="
-        echo "==="
-        cog-safe-push --push-official-model --config cog-safe-push-configs/$model.yaml -vv ${{ inputs.ignore_schema_checks && '--ignore-schema-compatibility' || '' }}
-
+    - name: Build and push
+      uses: docker/push-action@v6
+      with:
+          push: true
+          tags: photo-buzz-de/cog-flux-kontext:latest
+          secrets: |
+            GIT_AUTH_TOKEN=${{ secrets.MYTOKEN }}
   # unit-test:
   #   runs-on: ubuntu-latest
   #   if: github.event_name != 'workflow_dispatch'
